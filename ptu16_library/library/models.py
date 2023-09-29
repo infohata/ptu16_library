@@ -71,7 +71,12 @@ LOAN_STATUS = (
 
 
 class BookInstance(models.Model):
-    unique_id = models.UUIDField(_("unique ID"), db_index=True, unique=True)
+    unique_id = models.UUIDField(
+        _("unique ID"), 
+        db_index=True, 
+        unique=True,
+        default=uuid.uuid4,
+    )
     book = models.ForeignKey(
         Book, 
         verbose_name=_("book"), 
@@ -91,7 +96,7 @@ class BookInstance(models.Model):
         ordering = ["due_back"]
 
     def __str__(self):
-        return f"{self.book} UUID:{self.unique_id}"
+        return f"UUID:{self.unique_id}, {self.book}"
 
     def get_absolute_url(self):
         return reverse("bookinstance_detail", kwargs={"pk": self.pk})
