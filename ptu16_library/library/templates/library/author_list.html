@@ -5,7 +5,7 @@
 {% if author_list %}
     <ul class="nice-list">
         {% for author in author_list %}
-            <li>{{ author }}</li>
+            <li><a href="{% url "author_detail" author.pk %}">{{ author }}</a></li>
         {% endfor %}
     </ul>
 {% else %}
