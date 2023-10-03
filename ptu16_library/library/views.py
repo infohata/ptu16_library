@@ -1,3 +1,4 @@
+from typing import Any
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from . import models
@@ -6,6 +7,16 @@ from . import models
 class BookListView(generic.ListView):
     model = models.Book
     template_name = 'library/book_list.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['insight'] = "PTU16 books for your self development"
+        return context
+    
+
+class BookDetailView(generic.DetailView):
+    model = models.Book
+    template_name = 'library/book_detail.html'
 
 
 def index(request):

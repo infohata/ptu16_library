@@ -2,9 +2,10 @@
 {% block title %}Books in {{ block.super }}{% endblock title %}
 {% block content %}
 <h1>Books</h1>
+<p>{{ insight }}</p>
 <ul class="nice-list">
 {% for book in book_list %}
-    <li><a href="#">{{ book.title }}</a> 
+    <li><a href="{% url "book_detail" book.pk %}">{{ book.title }}</a> 
         by <a href="{% url "author_detail" book.author.pk %}">{{ book.author }}</a></li>
 {% empty %}
     <p>No books found.</p>
