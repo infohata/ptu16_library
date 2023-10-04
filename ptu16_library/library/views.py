@@ -7,11 +7,7 @@ from . import models
 class BookListView(generic.ListView):
     model = models.Book
     template_name = 'library/book_list.html'
-
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context['insight'] = "PTU16 books for your self development"
-        return context
+    paginate_by = 6
     
 
 class BookDetailView(generic.DetailView):
