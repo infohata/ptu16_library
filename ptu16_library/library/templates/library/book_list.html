@@ -2,21 +2,7 @@
 {% block title %}Books in {{ block.super }}{% endblock title %}
 {% block content %}
 <h1>Books</h1>
-<div class="pager">
-    {% if page_obj.has_previous %}
-        <a href="?page=1">First</a>
-        {% if page_obj.previous_page_number != 1 %}
-            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-        {% endif %}
-    {% endif %}
-    <span class="current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }} </span>
-    {% if page_obj.has_next %}
-        {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
-            <a href="?page={{ page_obj.next_page_number }}">Next</a>
-        {% endif %}
-        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-    {% endif %}
-</div>
+{% include "library/inc/pager_prev_next.html" %}
 <ul class="nice-list">
 {% for book in book_list %}
     <li><a href="{% url "book_detail" book.pk %}">{{ book.title }}</a> 
@@ -25,15 +11,5 @@
     <p>No books found.</p>
 {% endfor %}
 </ul>
-<div class="pager">
-    {% if page_obj.has_other_pages %}
-        {% for page in page_obj.paginator.page_range %}
-            {% if page != page_obj.number %}
-                <a href="?page={{ page }}">{{ page }}</a>
-            {% else %}
-                <span class="current">{{ page }}</span>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-</div>
+{% include "library/inc/pager_pages.html" %}
 {% endblock content %}

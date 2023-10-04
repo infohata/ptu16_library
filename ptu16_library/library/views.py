@@ -1,4 +1,5 @@
 from typing import Any
+from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from . import models
@@ -26,10 +27,12 @@ def index(request):
     return render(request, 'library/index.html', context)
 
 def authors(request):
+    author_pages = Paginator(models.Author.objects.all(), 4)
+    current_page = request.GET.get('page') or 1
     return render(
         request, 
         'library/author_list.html', 
-        {'author_list': models.Author.objects.all()}
+        {'author_list': author_pages.get_page(current_page)}
     )
 
 def author_detail(request, pk):
