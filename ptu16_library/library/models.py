@@ -1,7 +1,11 @@
+from datetime import date
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 import uuid
+
+User = get_user_model()
 
 
 class Genre(models.Model):
@@ -99,6 +103,12 @@ class BookInstance(models.Model):
     status = models.PositiveSmallIntegerField(
         _("status"), choices=LOAN_STATUS, default=0
     )
+    reader = models.ForeignKey(
+        User, 
+        verbose_name=_("reader"), 
+        on_delete=models.CASCADE,
+        null=True, blank=True,
+    )
 
     class Meta:
         verbose_name = _("book instance")
@@ -110,3 +120,9 @@ class BookInstance(models.Model):
 
     def get_absolute_url(self):
         return reverse("bookinstance_detail", kwargs={"pk": self.pk})
+
+    @property
+    def is_overdue(self):
+        if self.due_back and self.due_back < date.today():
+            return True
+        return False
