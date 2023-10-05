@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+from tinymce.models import HTMLField
 import uuid
 
 User = get_user_model()
@@ -26,7 +27,7 @@ class Genre(models.Model):
 class Author(models.Model):
     first_name = models.CharField(_("first name"), max_length=100, db_index=True)
     last_name = models.CharField(_("last name"), max_length=100, db_index=True)
-    bio = models.TextField(_("Bio"), max_length=4000, default='', blank=True)
+    bio = HTMLField(_("Bio"), max_length=10000, default='', blank=True)
 
     class Meta:
         verbose_name = _("author")
@@ -58,7 +59,7 @@ class Book(models.Model):
         related_name="books",
     )
     cover = models.ImageField(_("cover"), upload_to='book_covers', null=True, blank=True)
-    summary = models.TextField(_("summary"))
+    summary = HTMLField(_("summary"), max_length=10000, default='', blank=True)
 
     class Meta:
         verbose_name = _("book")
