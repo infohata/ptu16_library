@@ -111,7 +111,7 @@ table.book-instances {
     width: 100%;
 }
 table.book-instances td, th {
-    padding: 0.25rem 0.5rem;
+    padding: 0.5rem;
 }
 .center {
     text-align: center;
@@ -181,6 +181,7 @@ a.btn {
     background-color: #cccccc;
     border-radius: 1rem;
     padding: 0.25rem;
+    margin: 0.25rem 0.125rem;
 }
 a.btn:hover {
     background-color: #e8e8e8;

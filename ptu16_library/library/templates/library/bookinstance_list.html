@@ -19,14 +19,19 @@
                 {% if not bookinstance.is_overdue %}
                     <a class="btn" href="{% url "user_book_take" bookinstance.pk %}">
                         {% if bookinstance.status == 1 %}
-                        Take
+                            Take
                         {% elif bookinstance.status == 2 %}
-                        Extend
+                            Extend
                         {% endif %}
                     </a>
-                {% else %}
-                    -
                 {% endif %}
+                <a class="btn" href="{% url "user_book_return" bookinstance.pk %}">
+                    {% if bookinstance.status == 1 %}
+                        Cancel
+                    {% elif bookinstance.status == 2 %}
+                        Return
+                    {% endif %}
+                </a>
             </td>            
             <td><a href="{% url "book_detail" bookinstance.book.pk %}">{{ bookinstance.book }}</a></td>
             <td>{{ bookinstance.unique_id }}</td>

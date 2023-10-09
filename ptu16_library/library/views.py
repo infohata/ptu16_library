@@ -11,6 +11,28 @@ from django.urls import reverse_lazy
 from . import models, forms
 
 
+class UserBookReturnCancelView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = models.BookInstance
+    success_url = reverse_lazy('user_books')
+    template_name = 'library/user_book_return.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        if self.object.status == 1:
+            context['action'] = 'cancel'
+        else:
+            context['action'] = 'return'
+        return context
+
+    def test_func(self) -> bool | None:
+        self.object = self.get_object()
+        return self.request.user == self.object.reader
+    
+    def get_success_url(self) -> str:
+        messages.success(self.request, f"{self.object.book} with unique ID {self.object.unique_id} successfully returned or cancelled.")
+        return super().get_success_url()
+
+
 class UserBookTakeExtendView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = models.BookInstance
     form_class = forms.BookInstanceForm
@@ -25,9 +47,9 @@ class UserBookTakeExtendView(LoginRequiredMixin, UserPassesTestMixin, generic.Up
         context = super().get_context_data(**kwargs)
         context['book'] = self.object.book
         if self.object.status == 1:
-            context['action'] = 'Take'
+            context['action'] = 'take'
         else:
-            context['action'] = 'Extend'
+            context['action'] = 'extend'
         return context
 
     def get_initial(self) -> dict[str, Any]:

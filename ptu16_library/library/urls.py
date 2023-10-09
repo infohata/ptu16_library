@@ -10,4 +10,5 @@ urlpatterns = [
     path('books/my/', views.UserBookListView.as_view(), name='user_books'),
     path('book/<int:book_pk>/reserve/', views.UserBookReserveView.as_view(), name='user_book_reserve'),
     path('books/my/<int:pk>/take/', views.UserBookTakeExtendView.as_view(), name='user_book_take'),
+    path('books/my/<int:pk>/return/', views.UserBookReturnCancelView.as_view(), name='user_book_return'),
 ]
