@@ -1,7 +1,7 @@
 from typing import Any
 from datetime import date, timedelta
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator
 from django.db.models.query import QuerySet, Q
 from django.http import HttpRequest, HttpResponse
@@ -9,6 +9,40 @@ from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.urls import reverse_lazy
 from . import models, forms
+
+
+class UserBookTakeExtendView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    model = models.BookInstance
+    form_class = forms.BookInstanceForm
+    success_url = reverse_lazy('user_books')
+    template_name = 'library/user_book_form.html'
+
+    def test_func(self) -> bool | None:
+        self.object = self.get_object()
+        return self.request.user == self.object.reader
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['book'] = self.object.book
+        if self.object.status == 1:
+            context['action'] = 'Take'
+        else:
+            context['action'] = 'Extend'
+        return context
+
+    def get_initial(self) -> dict[str, Any]:
+        initial = super().get_initial()
+        initial['status'] = 2
+        initial['due_back'] = date.today() + timedelta(days=14)
+        return initial
+
+    def form_valid(self, form: forms.BookInstanceForm) -> HttpResponse:
+        form.instance.book = self.object.book
+        form.instance.status = 2
+        form.instance.reader = self.request.user
+        messages.success(self.request, f"""{form.instance.book} is taken 
+as {form.instance.unique_id} until {form.instance.due_back}.""")
+        return super().form_valid(form)
 
 
 class UserBookReserveView(LoginRequiredMixin, generic.CreateView):
@@ -20,6 +54,7 @@ class UserBookReserveView(LoginRequiredMixin, generic.CreateView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['book'] = get_object_or_404(models.Book, pk=self.kwargs['book_pk'])
+        context['action'] = 'Reserve'
         return context
 
     def get_initial(self) -> dict[str, Any]:

@@ -7,6 +7,7 @@
         <tr>
             <th>Due Back</th>
             <th>Status</th>
+            <th>Actions</th>
             <th>Book</th>
             <th>Copy ID</th>
         </tr>
@@ -14,6 +15,19 @@
         <tr class="data-row {% if bookinstance.is_overdue %}is-overdue{% endif %}">
             <td>{{ bookinstance.due_back }}</td>
             <td>{{ bookinstance.get_status_display }}</td>
+            <td>
+                {% if not bookinstance.is_overdue %}
+                    <a class="btn" href="{% url "user_book_take" bookinstance.pk %}">
+                        {% if bookinstance.status == 1 %}
+                        Take
+                        {% elif bookinstance.status == 2 %}
+                        Extend
+                        {% endif %}
+                    </a>
+                {% else %}
+                    -
+                {% endif %}
+            </td>            
             <td><a href="{% url "book_detail" bookinstance.book.pk %}">{{ bookinstance.book }}</a></td>
             <td>{{ bookinstance.unique_id }}</td>
         </tr>
