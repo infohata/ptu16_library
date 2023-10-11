@@ -27,7 +27,7 @@ class Genre(models.Model):
 class Author(models.Model):
     first_name = models.CharField(_("first name"), max_length=100, db_index=True)
     last_name = models.CharField(_("last name"), max_length=100, db_index=True)
-    bio = HTMLField(_("Bio"), max_length=10000, default='', blank=True)
+    bio = HTMLField(_("bio"), max_length=10000, default='', blank=True)
 
     class Meta:
         verbose_name = _("author")
@@ -90,7 +90,7 @@ class BookReview(models.Model):
         on_delete=models.CASCADE,
         related_name='book_reviews',
     )
-    content = models.TextField(_("Content"), max_length=4000)
+    content = models.TextField(_("content"), max_length=4000)
     created_at = models.DateTimeField(
         _("created at"), 
         auto_now_add=True, 

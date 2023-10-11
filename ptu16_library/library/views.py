@@ -8,6 +8,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from . import models, forms
 
 
@@ -19,9 +20,9 @@ class UserBookReturnCancelView(LoginRequiredMixin, UserPassesTestMixin, generic.
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         if self.object.status == 1:
-            context['action'] = 'cancel'
+            context['action'] = _('cancel')
         else:
-            context['action'] = 'return'
+            context['action'] = _('return')
         return context
 
     def test_func(self) -> bool | None:
@@ -29,7 +30,9 @@ class UserBookReturnCancelView(LoginRequiredMixin, UserPassesTestMixin, generic.
         return self.request.user == self.object.reader
     
     def get_success_url(self) -> str:
-        messages.success(self.request, f"{self.object.book} with unique ID {self.object.unique_id} successfully returned or cancelled.")
+        _with_uuid = _('with unique ID')
+        _successfully_returned = _('successfully returned or cancelled')
+        messages.success(self.request, f"{self.object.book} {_with_uuid} {self.object.unique_id} {_successfully_returned}.")
         return super().get_success_url()
 
 
@@ -47,9 +50,9 @@ class UserBookTakeExtendView(LoginRequiredMixin, UserPassesTestMixin, generic.Up
         context = super().get_context_data(**kwargs)
         context['book'] = self.object.book
         if self.object.status == 1:
-            context['action'] = 'take'
+            context['action'] = _('take')
         else:
-            context['action'] = 'extend'
+            context['action'] = _('extend')
         return context
 
     def get_initial(self) -> dict[str, Any]:
@@ -62,8 +65,10 @@ class UserBookTakeExtendView(LoginRequiredMixin, UserPassesTestMixin, generic.Up
         form.instance.book = self.object.book
         form.instance.status = 2
         form.instance.reader = self.request.user
-        messages.success(self.request, f"""{form.instance.book} is taken 
-as {form.instance.unique_id} until {form.instance.due_back}.""")
+        _is_taken_as = _('is taken as')
+        _until = _('until')
+        messages.success(self.request, f"""{form.instance.book} {_is_taken_as} 
+{form.instance.unique_id} {_until} {form.instance.due_back}.""")
         return super().form_valid(form)
 
 
@@ -76,7 +81,7 @@ class UserBookReserveView(LoginRequiredMixin, generic.CreateView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['book'] = get_object_or_404(models.Book, pk=self.kwargs['book_pk'])
-        context['action'] = 'Reserve'
+        context['action'] = _('reserve')
         return context
 
     def get_initial(self) -> dict[str, Any]:
@@ -91,8 +96,10 @@ class UserBookReserveView(LoginRequiredMixin, generic.CreateView):
         form.instance.book = get_object_or_404(models.Book, pk=self.kwargs['book_pk'])
         form.instance.status = 1
         form.instance.reader = self.request.user
-        messages.success(self.request, f"""{form.instance.book} is reserved 
-as {form.instance.unique_id} for you until {form.instance.due_back}.""")
+        _is_reserved_as = _('is reserved as')
+        _for_you_until = _('for you until')
+        messages.success(self.request, f"""{form.instance.book} {_is_reserved_as}
+{form.instance.unique_id} {_for_you_until} {form.instance.due_back}.""")
         return super().form_valid(form)
 
 
@@ -151,7 +158,7 @@ class BookDetailView(generic.edit.FormMixin, generic.DetailView):
         form.instance.book = self.object
         form.instance.reviewer = self.request.user
         form.save()
-        messages.success(self.request, 'Review posted successfully.')
+        messages.success(self.request, _('Review posted successfully.'))
         return super().form_valid(form)
     
     def get_success_url(self) -> str:

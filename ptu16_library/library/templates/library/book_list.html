@@ -1,13 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Books in {{ block.super }}{% endblock title %}
+{% load i18n %}
+{% block title %}{% trans "books in"|capfirst %} {{ block.super }}{% endblock title %}
 {% block content %}
-<h1>Books</h1>
+<h1>{% trans "books"|title %}</h1>
 {% include "library/inc/pager_prev_next.html" %}
 <ul class="card-list">
 {% for book in book_list %}
     {% include "library/inc/book_card.html" %}
 {% empty %}
-    <p>No books found.</p>
+    <p>{% trans "no books found"|capfirst %}.</p>
 {% endfor %}
 </ul>
 {% include "library/inc/pager_pages.html" %}

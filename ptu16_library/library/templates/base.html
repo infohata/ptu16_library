@@ -1,31 +1,31 @@
 <!DOCTYPE html>
-{% load static %}
+{% load static i18n %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}PTU16 Library{% endblock title %}</title>
+    <title>{% block title %}PTU16 {% trans "library"|title %}{% endblock title %}</title>
     <link rel="stylesheet" href="{% static "css/base_style.css" %}">
     <style></style>
 </head>
 <body>
     <header>
         <ul class="nav">
-            <li class="logo">PTU16 Library</li>
-            <li><a href="{% url "index" %}">Home</a></li>
-            <li><a href="{% url "authors" %}">Authors</a></li>
-            <li><a href="{% url "books" %}">Books</a></li>
+            <li class="logo">PTU16 {% trans "library"|title %}</li>
+            <li><a href="{% url "index" %}">{% trans "home"|title %}</a></li>
+            <li><a href="{% url "authors" %}">{% trans "authors"|title %}</a></li>
+            <li><a href="{% url "books" %}">{% trans "books"|title %}</a></li>
             <li class="spacer"></li>
             {% if user.is_authenticated %}
-                <li><a href="{% url "user_books" %}">My Books</a></li>
+                <li><a href="{% url "user_books" %}">{% trans "my books"|title %}</a></li>
                 {% if user.is_superuser or user.is_staff %}
-                    <li><a href="{% url "admin:index" %}">Admin</a></li>
+                    <li><a href="{% url "admin:index" %}">{% trans "admin"|title %}</a></li>
                 {% endif %}
                 <li><a href="{% url "profile" %}">{{ user.username }}</a></li>
-                <li><a href="{% url "logout" %}">Logout</a></li>
+                <li><a href="{% url "logout" %}">{% trans "logout"|title %}</a></li>
             {% else %}
-                <li><a href="{% url "login" %}">Login</a></li>
-                <li><a href="{% url "signup" %}">Sign Up</a></li>
+                <li><a href="{% url "login" %}">{% trans "login"|title %}</a></li>
+                <li><a href="{% url "signup" %}">{% trans "sign up"|title %}</a></li>
             {% endif %}
         </ul>
     </header>
@@ -41,7 +41,7 @@
         {% endblock content %}
     </main>
     <footer>
-        <p>&copy; 2023 PTU16 Library</p>
+        <p>&copy; 2023 PTU16 {% trans "library"|title %}</p>
     </footer>
 </body>
 </html>

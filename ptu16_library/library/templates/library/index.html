@@ -1,16 +1,17 @@
 {% extends "base.html" %}
-{% block title %}Welcome to {{ block.super }}{% endblock title %}
+{% load i18n %}
+{% block title %}{% trans "welcome to"|capfirst %} {{ block.super }}{% endblock title %}
 {% block content %}
-<h1>Welcome to PTU16 Library</h1>
-<p>Currently in our library we have:</p>
+<h1>{% trans "Welcome to PTU16 Library" %}</h1>
+<p>{% trans "Currently in our library we have" %}:</p>
 <ul>
-    <li>Distinct books: {{ num_books }}</li>
-    <li>Book copies: {{ num_instances }}</li>
-    <li>Available copies for taking: {{ num_available }}</li>
-    <li>Book Authors: {{ num_authors }}</li>
-    <li>Your visits: {{ num_visits }}</li>
+    <li>{% trans "distinct books"|capfirst %}: {{ num_books }}</li>
+    <li>{% trans "book copies"|capfirst %}: {{ num_instances }}</li>
+    <li>{% trans "available copies for taking"|capfirst %}: {{ num_available }}</li>
+    <li>{% trans "book authors"|capfirst %}: {{ num_authors }}</li>
+    <li>{% trans "your visits"|capfirst %}: {{ num_visits }}</li>
 </ul>
-<h2>Genres</h2>
+<h2>{% trans "genres"|title %}</h2>
 <ul>
     {% for genre in genres %}
         <li>{{ genre }}</li>
