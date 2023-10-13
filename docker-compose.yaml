@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+  dev:
+    build: .
+    image: ptu16_library:dev
+    container_name: ptu16_library.dev
+    tty: true
+    stdin_open: true
+    restart: always
+    ports:
+      - 8000:8000
+    volumes:
+      - ./ptu16_library:/app
+    command: >
+      bash -c "python manage.py migrate &&
+      python manage.py collectstatic --noinput &&
+      gunicorn ptu16_library.wsgi --bind 0.0.0.0:8000"
+  nginx:
+    build: ./nginx/
+    image: nginx:ptu16_library
+    container_name: ptu16_library.nginx
+    restart: always
+    ports:
+      - 80:80
+    links:
+      - dev:library
+    volumes:
+      - ./ptu16_library/static:/app/static
+      - ./ptu16_library/media:/app/media
